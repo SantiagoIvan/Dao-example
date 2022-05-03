@@ -10,9 +10,8 @@ Mas info en:
 - https://docs.openzeppelin.com/contracts/4.x/wizard para generar los contratos customizados
 
 
-## Requerimientos
+## Install
 
 - yarn
 - yarn hardhat compile
-
 
