@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 
 // este va a ser el dueño del Box, y sera el que despues de un delay ejecutara
-// las propuestas, que estaran en cola esperando.
+// las propuestas ya aceptadas, que estaran en cola esperando ser ejecutadas.
 
 pragma solidity ^0.8.0;
 

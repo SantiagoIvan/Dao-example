@@ -17,7 +17,7 @@ contract GovernorContract is
     GovernorTimelockControl
 {
     constructor(
-        IVotes _token,
+        IVotes _token, // IVotes es una interfaz. _token es la direccion del contrato de nuestro Dao Token.
         TimelockController _timelock,
         uint256 _votingDelay,
         uint256 _votingPeriod,
