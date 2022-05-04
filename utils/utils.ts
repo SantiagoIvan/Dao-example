@@ -6,6 +6,9 @@ export const VOTING_PERIOD = 5 // 5 block
 export const QUORUM_PERCENTAGE = 4
 export const ADDRESS_ZERO = ethers.constants.AddressZero
 export const developmentChains = ['hardhat', 'localhost']
+export const VALUE_TO_STORE = 69
+export const FUNCTION_TO_CALL = 'store'
+export const PROPOSAL_DESCRIPTION = 'Some falopa description for the proposal'
 
 export interface networkConfigItem {
     ethUsdPriceFeed?: string

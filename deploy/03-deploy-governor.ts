@@ -7,8 +7,9 @@ import {
     QUORUM_PERCENTAGE,
     VOTING_DELAY,
     VOTING_PERIOD,
-} from '../helper-hardhat-config'
-import { networkConfig, developmentChains } from '../helper-hardhat-config'
+    networkConfig,
+    developmentChains,
+} from '../utils/utils'
 import verify from '../verify'
 
 const deployGovernor: DeployFunction = async (

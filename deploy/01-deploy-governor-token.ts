@@ -4,7 +4,7 @@ import 'hardhat-deploy'
 import '@nomiclabs/hardhat-ethers'
 import '@typechain/hardhat'
 import { ethers } from 'hardhat'
-import { networkConfig, developmentChains } from '../helper-hardhat-config'
+import { networkConfig, developmentChains } from '../utils/utils'
 import verify from '../verify'
 
 const deployGovernanceToken: DeployFunction = async (
