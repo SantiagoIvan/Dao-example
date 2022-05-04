@@ -10,6 +10,8 @@ export const VALUE_TO_STORE = 69
 export const FUNCTION_TO_CALL = 'store'
 export const PROPOSAL_DESCRIPTION = 'Some falopa description for the proposal'
 
+export const proposalsPath = 'proposals.json'
+
 export interface networkConfigItem {
     ethUsdPriceFeed?: string
     blockConfirmations?: number

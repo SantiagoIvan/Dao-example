@@ -7,7 +7,9 @@ import {
     VALUE_TO_STORE,
     developmentChains,
     VOTING_DELAY,
+    proposalsPath,
 } from '../utils/utils'
+import fs from 'fs'
 
 const propose = async (func: string, args: any[], description: string) => {
     const governor = await ethers.getContract('GovernorContract')
@@ -58,13 +60,22 @@ const propose = async (func: string, args: any[], description: string) => {
     if (developmentChains.includes(network.name)) {
         moveBlocks(VOTING_DELAY + 1)
     }
+
     // fijandome en el contrato, veo que emite un evento, donde uno de los argumentos es el proposalId
-    // Voy a necesitar eso cuando quiera votar.
+    // Voy a necesitar eso cuando quiera votar y en el otro script. Lo voy a guardar en un archivo 'proposals.json' cosa de poder accederlo
     // como solo emite un evento, el que quiero esta en events[0]
-    console.log(receipt.events[0].args['proposalId'])
+    const proposalId = receipt.events[0].args.proposalId
+    let proposals = JSON.parse(fs.readFileSync(proposalsPath, 'utf8'))
+
+    // vamos a guardar una lista de propuestas, por cada red
+    if (proposals[network.name])
+        proposals[network.name].push(proposalId.toString())
+    else proposals[network.name] = [proposalId.toString()]
+
+    fs.writeFileSync(proposalsPath, JSON.stringify(proposals))
 }
 
-propose(FUNCTION_TO_CALL, [VALUE_TO_STORE], PROPOSAL_DESCRIPTION)
+propose(FUNCTION_TO_CALL, [55], PROPOSAL_DESCRIPTION)
     .then(() => process.exit(0))
     .catch((error) => {
         console.log('Network: ', network.name)
