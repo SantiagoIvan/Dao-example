@@ -3,3 +3,4 @@ yarn.lock
 /artifacts
 /cache
 /typechain-types
+.env
