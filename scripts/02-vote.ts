@@ -30,10 +30,11 @@ const vote = async (proposalIndex: number) => {
     }
 
     const voteType = 1
+    const reason = 'i like that proposal'
     const voteTx = await governor.castVoteWithReason(
         proposalId,
         voteType,
-        'i like that proposal'
+        reason
     )
     await voteTx.wait(1)
 

@@ -58,7 +58,7 @@ const propose = async (func: string, args: any[], description: string) => {
 
     // Si estamos en local, vamos a tener que implementar de otra forma eso del delay.
     if (developmentChains.includes(network.name)) {
-        moveBlocks(VOTING_DELAY + 1)
+        moveBlocks(VOTING_DELAY + 2)
     }
 
     // fijandome en el contrato, veo que emite un evento, donde uno de los argumentos es el proposalId
@@ -75,7 +75,7 @@ const propose = async (func: string, args: any[], description: string) => {
     fs.writeFileSync(proposalsPath, JSON.stringify(proposals))
 }
 
-propose(FUNCTION_TO_CALL, [55], PROPOSAL_DESCRIPTION)
+propose(FUNCTION_TO_CALL, [VALUE_TO_STORE], PROPOSAL_DESCRIPTION)
     .then(() => process.exit(0))
     .catch((error) => {
         console.log('Network: ', network.name)
