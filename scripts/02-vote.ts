@@ -7,7 +7,6 @@ import fs from 'fs'
 const vote = async (proposalIndex: number) => {
     const proposals = JSON.parse(fs.readFileSync(proposalsPath, 'utf8'))
     const proposalId = proposals[network.name][proposalIndex]
-    console.log('asd')
     /**
      * Votacion:
      * 0: En contra

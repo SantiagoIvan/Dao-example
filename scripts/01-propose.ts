@@ -25,13 +25,13 @@ const propose = async (func: string, args: any[], description: string) => {
         [args]
     )
 
-    propose([77], 'store'),
-    Propongo guardar el valor 77 en el BOX. Como esto lo voy a usar mas adelante tambien en los tests
+    propose([69], 'store'),
+    Propongo guardar el valor 69 en el BOX. Como esto lo voy a usar mas adelante tambien en los tests
     Guardo esos valores en el utils. Basicamente porque es la unica funcion que tiene el contrato Box.
     */
     const encodedFunctionCall = box.interface.encodeFunctionData(func, args)
 
-    console.log(encodedFunctionCall)
+    console.log('Encoded function+args', encodedFunctionCall)
     // ahora creamos la transaccion
 
     console.log(
@@ -58,13 +58,15 @@ const propose = async (func: string, args: any[], description: string) => {
 
     // Si estamos en local, vamos a tener que implementar de otra forma eso del delay.
     if (developmentChains.includes(network.name)) {
-        moveBlocks(VOTING_DELAY + 2)
+        moveBlocks(VOTING_DELAY + 1)
     }
 
     // fijandome en el contrato, veo que emite un evento, donde uno de los argumentos es el proposalId
     // Voy a necesitar eso cuando quiera votar y en el otro script. Lo voy a guardar en un archivo 'proposals.json' cosa de poder accederlo
     // como solo emite un evento, el que quiero esta en events[0]
     const proposalId = receipt.events[0].args.proposalId
+    const proposalState = await governor.state(proposalId)
+    console.log('State', proposalState)
     let proposals = JSON.parse(fs.readFileSync(proposalsPath, 'utf8'))
 
     // vamos a guardar una lista de propuestas, por cada red
