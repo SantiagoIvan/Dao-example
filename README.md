@@ -16,3 +16,11 @@ Mas info en:
 - yarn
 - yarn hardhat compile
 
+## Run
+
+### Localhost
+
+- Levantar en una terminal el nodo local con <yarn hardhat node>
+- Verificar que haya un objeto vacio en el archivo 'proposals.json'
+- Correr en otra terminal los scripts con <yarn hardhat run scripts/script-name --network localhost>
+- Correrlos en orden y se va a ver como se crea una propuesta, se vota y se ejecuta. Al finalizar se consulta el nuevo valor dentro de la caja
