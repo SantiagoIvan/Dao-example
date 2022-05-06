@@ -34,6 +34,9 @@ const deployGovernanceToken: DeployFunction = async (
     // Actualmente nadie tendria tokens, vamos a delegarselos al deployers para que despues pueda votar.
     // Asi tengo a alguien para que pueda votar
     await delegate(daoToken.address, deployer)
+    const c = await ethers.getContract('DaoToken', deployer)
+    const balance = await c.balanceOf(deployer)
+    console.log(`Balance of the deployer: ${balance.toString()} DaoTokens`)
 }
 
 const delegate = async (daoTokenAddress: string, delegatedAccount: string) => {
