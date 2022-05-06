@@ -1,4 +1,4 @@
-import { expect } from 'chai'
+import { assert, expect } from 'chai'
 import '@nomiclabs/hardhat-ethers'
 import { ethers } from 'hardhat'
 import {
@@ -100,11 +100,40 @@ describe('Set of Contracts', function () {
         })
     })
 
-    describe('Transactions', function () {
-        it('Should transfer tokens between accounts', async function () {})
+    describe('Box Ownership', function () {
+        it('Owner should be deployer initially', async function () {
+            const owner = await box.owner()
+            expect(owner).to.equal(deployer.address)
+        })
 
-        it('Should fail if sender doesn’t have enough tokens', async function () {})
+        it('Should transfer ownership to timelock contract', async function () {
+            const transferOwnershipTx = await box.transferOwnership(
+                timelock.address
+            )
+            await transferOwnershipTx.wait(1)
+            const newOwner = await box.owner()
+            expect(newOwner).to.equal(timelock.address)
+        })
 
-        it('Should update balances after transfers', async function () {})
+        it('Should fail if a random tries to update the Box', async function () {
+            const transferOwnershipTx = await box.transferOwnership(
+                timelock.address
+            )
+            await transferOwnershipTx.wait(1)
+            // esta es la unica forma que se me ocurrio para testear que lance una exception
+            try {
+                await box.store(55)
+                assert(false)
+            } catch (error) {
+                assert(true)
+            }
+
+            // Intente varias formas para testear que lance ese tipo de VMException pero ninguna me funciono :C. Solo la que invente arriba.
+            // expect(await box.store(55)).to.throws(
+            //     'Ownable: caller is not the owner'
+            // )
+            // expect(await box.store(55)).to.throw()
+            // assert.
+        })
     })
 })
