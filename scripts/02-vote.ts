@@ -4,7 +4,7 @@ import { moveBlocks } from '../utils/moveBlocks'
 import { developmentChains, proposalsPath, VOTING_PERIOD } from '../utils/utils'
 import fs from 'fs'
 
-const vote = async (proposalIndex: number) => {
+export const vote = async (proposalIndex: number) => {
     const proposals = JSON.parse(fs.readFileSync(proposalsPath, 'utf8'))
     const proposalId = proposals[network.name][proposalIndex]
     /**

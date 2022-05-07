@@ -11,7 +11,11 @@ import {
 } from '../utils/utils'
 import fs from 'fs'
 
-const propose = async (func: string, args: any[], description: string) => {
+export const propose = async (
+    func: string,
+    args: any[],
+    description: string
+) => {
     const governor = await ethers.getContract('GovernorContract')
     const box = await ethers.getContract('Box')
 

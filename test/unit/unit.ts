@@ -16,6 +16,7 @@ import {
     VOTING_DELAY,
     VOTING_PERIOD,
 } from '../../utils/utils'
+import { propose } from '../../scripts/01-propose'
 
 /**
  * `describe` es una funcion que permite organizar los tests. En realidad no es obligatoria,
@@ -78,6 +79,10 @@ describe('Set of Contracts', function () {
         await timelock.deployed()
         await governor.deployed()
         await box.deployed()
+        const transferOwnershipTx = await box.transferOwnership(
+            timelock.address
+        )
+        await transferOwnershipTx.wait(1)
     })
 
     describe('Deployment', function () {
@@ -101,25 +106,12 @@ describe('Set of Contracts', function () {
     })
 
     describe('Box Ownership', function () {
-        it('Owner should be deployer initially', async function () {
-            const owner = await box.owner()
-            expect(owner).to.equal(deployer.address)
-        })
-
         it('Should transfer ownership to timelock contract', async function () {
-            const transferOwnershipTx = await box.transferOwnership(
-                timelock.address
-            )
-            await transferOwnershipTx.wait(1)
-            const newOwner = await box.owner()
-            expect(newOwner).to.equal(timelock.address)
+            const owner = await box.owner()
+            expect(owner).to.equal(timelock.address)
         })
 
         it('Should fail if a random tries to update the Box', async function () {
-            const transferOwnershipTx = await box.transferOwnership(
-                timelock.address
-            )
-            await transferOwnershipTx.wait(1)
             // esta es la unica forma que se me ocurrio para testear que lance una exception
             try {
                 await box.store(55)
@@ -133,7 +125,12 @@ describe('Set of Contracts', function () {
             //     'Ownable: caller is not the owner'
             // )
             // expect(await box.store(55)).to.throw()
-            // assert.
+            // assert.fail() tampoco funciona
+        })
+    })
+    describe('Proposal', function () {
+        it('Deployer makes a proposal successfully', async function () {
+            expect(daoToken.address).to.not.equal(ADDRESS_ZERO)
         })
     })
 })

@@ -7,14 +7,13 @@ import {
     PROPOSAL_DESCRIPTION,
     MIN_DELAY,
 } from '../utils/utils'
-import fs from 'fs'
 import { moveTime } from '../utils/moveTime'
 import { moveBlocks } from '../utils/moveBlocks'
 
 // la funcion de queue se encuentra en el contrato IGovernorTimelock
 // https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/governance/extensions/GovernorTimelockControl.sol
 // la firma de la funcion es la misma que proposal, la unica diferencia es el hash description
-const queueAndExecute = async (func: string, val: number) => {
+export const queueAndExecute = async (func: string, val: number) => {
     const box = await ethers.getContract('Box')
     const governor = await ethers.getContract('GovernorContract')
     const encodedFunctionCall = box.interface.encodeFunctionData(func, [val])
