@@ -1,6 +1,6 @@
 import { assert, expect } from 'chai'
 import '@nomiclabs/hardhat-ethers'
-import { ethers } from 'hardhat'
+import { deployments, ethers, network } from 'hardhat'
 import {
     GovernorContract,
     DaoToken,
@@ -11,12 +11,18 @@ import { SignerWithAddress } from 'hardhat-deploy-ethers/signers'
 import { Contract } from 'ethers'
 import {
     ADDRESS_ZERO,
+    developmentChains,
+    FUNCTION_TO_CALL,
     MIN_DELAY,
+    PROPOSAL_DESCRIPTION,
     QUORUM_PERCENTAGE,
+    VALUE_TO_STORE,
     VOTING_DELAY,
     VOTING_PERIOD,
 } from '../../utils/utils'
 import { propose } from '../../scripts/01-propose'
+import setUp from '../../deploy/04-setup-governance'
+import { moveBlocks } from '../../utils/moveBlocks'
 
 /**
  * `describe` es una funcion que permite organizar los tests. En realidad no es obligatoria,
@@ -79,6 +85,22 @@ describe('Set of Contracts', function () {
         await timelock.deployed()
         await governor.deployed()
         await box.deployed()
+
+        // Set up
+        const proposerRole = await timelock.PROPOSER_ROLE()
+        const executorRole = await timelock.EXECUTOR_ROLE()
+        const adminRole = await timelock.TIMELOCK_ADMIN_ROLE()
+
+        const proposerTx = await timelock.grantRole(
+            proposerRole,
+            governor.address
+        )
+        await proposerTx.wait(1)
+        const executorTx = await timelock.grantRole(executorRole, ADDRESS_ZERO)
+        await executorTx.wait(1)
+        const adminTx = await timelock.revokeRole(adminRole, deployer.address)
+        await adminTx.wait(1)
+
         const transferOwnershipTx = await box.transferOwnership(
             timelock.address
         )
@@ -130,7 +152,26 @@ describe('Set of Contracts', function () {
     })
     describe('Proposal', function () {
         it('Deployer makes a proposal successfully', async function () {
-            expect(daoToken.address).to.not.equal(ADDRESS_ZERO)
+            const encodedFunctionCall = box.interface.encodeFunctionData(
+                FUNCTION_TO_CALL,
+                [VALUE_TO_STORE]
+            )
+            const proposeTx = await governor.propose(
+                [box.address],
+                [0],
+                [encodedFunctionCall],
+                PROPOSAL_DESCRIPTION
+            )
+            const receipt = await proposeTx.wait(1)
+            const proposalId = receipt.events[0].args.proposalId
+            let proposalState = await governor.state(proposalId)
+            expect(proposalState).to.equal(0) // estado pendiente
+
+            if (developmentChains.includes(network.name)) {
+                moveBlocks(VOTING_DELAY + 1)
+            }
+            proposalState = await governor.state(proposalId)
+            expect(proposalState).to.equal(1) // estado activa
         })
     })
 })
