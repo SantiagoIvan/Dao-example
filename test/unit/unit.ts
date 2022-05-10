@@ -150,28 +150,4 @@ describe('Set of Contracts', function () {
             // assert.fail() tampoco funciona
         })
     })
-    describe('Proposal', function () {
-        it('Deployer makes a proposal successfully', async function () {
-            const encodedFunctionCall = box.interface.encodeFunctionData(
-                FUNCTION_TO_CALL,
-                [VALUE_TO_STORE]
-            )
-            const proposeTx = await governor.propose(
-                [box.address],
-                [0],
-                [encodedFunctionCall],
-                PROPOSAL_DESCRIPTION
-            )
-            const receipt = await proposeTx.wait(1)
-            const proposalId = receipt.events[0].args.proposalId
-            let proposalState = await governor.state(proposalId)
-            expect(proposalState).to.equal(0) // estado pendiente
-
-            if (developmentChains.includes(network.name)) {
-                moveBlocks(VOTING_DELAY + 1)
-            }
-            proposalState = await governor.state(proposalId)
-            expect(proposalState).to.equal(1) // estado activa
-        })
-    })
 })
